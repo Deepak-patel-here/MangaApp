@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 android {
@@ -56,4 +57,32 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //ktor client
+    implementation("io.ktor:ktor-client-core:2.3.6")
+
+    // Ktor Client for Android
+    implementation("io.ktor:ktor-client-android:2.3.6")
+
+    // JSON Serialization (for handling JSON responses)
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.6")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    // Content Negotiation (for automatic serialization)
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.6")
+
+    // Logging (for debugging API requests and responses)
+    implementation("io.ktor:ktor-client-logging:2.3.6")
+
+    // SLF4J Logger (for better logging support)
+    implementation("org.slf4j:slf4j-simple:2.0.9")
+
+    //lottie animation
+    implementation ("com.airbnb.android:lottie-compose:6.4.0")
+
+    //coil for image
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    val nav_version = "2.8.9"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
 }
