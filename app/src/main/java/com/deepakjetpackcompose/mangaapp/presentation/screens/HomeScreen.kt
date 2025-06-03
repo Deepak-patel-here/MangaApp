@@ -1,5 +1,6 @@
 package com.deepakjetpackcompose.mangaapp.presentation.screens
 
+import MangaImagePager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,7 +21,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.deepakjetpackcompose.mangaapp.presentation.component.MangaImageSlider
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
 import io.ktor.http.hostIsIp
 
@@ -41,7 +41,7 @@ fun HomeScreen(mangaViewModel: MangaViewModel,modifier: Modifier = Modifier) {
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             // Background image slider
-            MangaImageSlider(mangaList = mangaList.value)
+            MangaImagePager(mangaList = mangaList.value)
 
             // Transparent TopAppBar
             TopAppBar(
