@@ -11,6 +11,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -42,5 +43,24 @@ object ApiClient {
         val fileName = attributes["fileName"]?.jsonPrimitive?.content ?: throw NullPointerException("Missing 'fileName'")
 
         return fileName
+    }
+}
+
+fun main()= runBlocking {
+    val mangas = ApiClient.getAllMangas()
+
+    // Take the first manga
+    val manga = mangas[0]
+
+    // Find the relationship with type == "cover_art"
+    val coverId = manga.relationships.firstOrNull { it.type == "cover_art" }?.id
+
+    if (coverId != null) {
+        val fileName = ApiClient.getMangaCover(coverId)
+        val imageUrl = "https://uploads.mangadex.org/covers/${manga.id}/$fileName"
+
+        println("Image URL: $imageUrl")
+    } else {
+        println("Cover ID not found.")
     }
 }
