@@ -1,33 +1,43 @@
 package com.deepakjetpackcompose.mangaapp.presentation.screens
 
-import MangaImagePager
-import androidx.compose.foundation.Image
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import com.deepakjetpackcompose.mangaapp.presentation.component.MangaImagePager
+import com.deepakjetpackcompose.mangaapp.presentation.component.MangaTopBar
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
-import io.ktor.http.hostIsIp
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(mangaViewModel: MangaViewModel,modifier: Modifier = Modifier) {
     val mangaList =mangaViewModel.mangaList.collectAsState()
+    val systemController = rememberSystemUiController()
+
+    SideEffect {
+        systemController.setStatusBarColor(
+            color = Color.Transparent,
+            darkIcons = false
+        )
+
+        systemController.setNavigationBarColor(
+            color = Color.Black,
+            darkIcons = false
+        )
+    }
     LaunchedEffect(Unit) {
         mangaViewModel.getAllManga()
     }
@@ -44,14 +54,8 @@ fun HomeScreen(mangaViewModel: MangaViewModel,modifier: Modifier = Modifier) {
             MangaImagePager(mangaList = mangaList.value)
 
             // Transparent TopAppBar
-            TopAppBar(
-                title = { Text("Manga App", color = Color.White) },
-                modifier = Modifier
-                    .statusBarsPadding(), // ✅ Push content below status bar
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
-                )
-            )
+            MangaTopBar(modifier = Modifier.statusBarsPadding())
+
         }
     }
 
