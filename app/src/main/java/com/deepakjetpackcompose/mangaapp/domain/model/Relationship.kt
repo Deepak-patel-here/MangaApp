@@ -1,6 +1,9 @@
 package com.deepakjetpackcompose.mangaapp.domain.model
 
-data class Relationship(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Relationship2(
     val id: String,
     val type: String
 )

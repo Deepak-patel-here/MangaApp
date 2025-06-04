@@ -1,7 +1,10 @@
 package com.deepakjetpackcompose.mangaapp.data.remote
 
+import com.deepakjetpackcompose.mangaapp.domain.model.ChapterModel
+import com.deepakjetpackcompose.mangaapp.domain.model.Data
 import com.deepakjetpackcompose.mangaapp.domain.model.Manga
 import com.deepakjetpackcompose.mangaapp.domain.model.MangaDexResponse
+import com.deepakjetpackcompose.mangaapp.domain.model.chpater.ChapterData
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -19,7 +22,9 @@ import kotlinx.serialization.json.jsonPrimitive
 object ApiClient {
     val client: HttpClient= HttpClient{
         install(ContentNegotiation){
-            json(json = Json { ignoreUnknownKeys=true })
+            json(json = Json { ignoreUnknownKeys=true
+                isLenient = true
+                coerceInputValues = true})
         }
     }
 
@@ -78,17 +83,33 @@ object ApiClient {
         return response.data
     }
 
-    suspend fun getChaptersForManga(mangaId: String): {
-        val response= client.get("https://api.mangadex.org/chapter") {
+    suspend fun getChaptersForManga(mangaId: String): List<Data> {
+        val response: ChapterModel= client.get("https://api.mangadex.org/chapter") {
             parameter("manga", mangaId)
             parameter("translatedLanguage[]", "en")
             parameter("order[chapter]", "asc")
             parameter("limit", 100)
-        }
+        }.body()
+        return response.data
+    }
+
+
+    suspend fun getChapterData(chapterId: String): ChapterData{
+        val response: ChapterData=client.get("https://api.mangadex.org/at-home/server/$chapterId").body()
+        return response
     }
 }
 
 fun main()= runBlocking {
     val mangas = ApiClient.getTopAiredManga()
+    val manga=mangas[0]
+    val chapters= ApiClient.getChaptersForManga(manga.id)
+    chapters.forEach {chapter->
+        println(chapter.id)
+    }
+    val chapter= ApiClient.getChapterData(chapters[0].id)
+    println("${chapter.baseUrl}/data/${chapter.chapter.hash}/${chapter.chapter.data[0]}")
+
+
 
 }
