@@ -74,9 +74,9 @@ fun MangaImagePager(mangaList: List<MangaUiModel>) {
                     .background(
                         Brush.verticalGradient(
                             colorStops = arrayOf(
-                                0.0f to Color.Black.copy(alpha = 0.3f),
+                                0.0f to Color.Black.copy(alpha = 0.4f),
                                 0.2f to Color.Transparent,
-                                1.0f to Color.Black
+                                1.0f to Color(0xFF1D1D1D)
                             )
                         )
                     )
@@ -131,7 +131,7 @@ fun MangaImagePager(mangaList: List<MangaUiModel>) {
 
                         OutlinedButton(
                             onClick = {},
-                            border = BorderStroke(width = 1.dp, color = Color.Red),
+                            border = BorderStroke(width = 1.dp, color = Color.White),
                             modifier = Modifier
                                 .wrapContentSize()
                                 .height(35.dp),
@@ -143,11 +143,11 @@ fun MangaImagePager(mangaList: List<MangaUiModel>) {
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Add,
-                                    contentDescription = null, tint = Color.Red,
+                                    contentDescription = null, tint = Color.White,
                                     modifier = Modifier.size(25.dp)
                                 )
                                 Spacer(Modifier.width(10.dp))
-                                Text("my list", color = Color.Red
+                                Text("my list", color = Color.White
                                 )
 
 

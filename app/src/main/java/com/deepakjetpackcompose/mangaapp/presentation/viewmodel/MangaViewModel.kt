@@ -15,14 +15,25 @@ class MangaViewModel : ViewModel() {
     private val _mangaList = MutableStateFlow<List<MangaUiModel>>(emptyList())
     val mangaList: StateFlow<List<MangaUiModel>> = _mangaList
 
+    private val _getTopAired= MutableStateFlow<List<MangaUiModel>>(emptyList())
+    val getTopAired: StateFlow<List<MangaUiModel>> = _getTopAired
+
+    private val _getFavourite= MutableStateFlow<List<MangaUiModel>>(emptyList())
+    val getFavourite: StateFlow<List<MangaUiModel>> = _getFavourite
+
+    private val _getUpdated= MutableStateFlow<List<MangaUiModel>>(emptyList())
+    val getUpdated: StateFlow<List<MangaUiModel>> = _getUpdated
+
+    private val _getNew= MutableStateFlow<List<MangaUiModel>>(emptyList())
+    val getNew: StateFlow<List<MangaUiModel>> = _getNew
+
 
     fun getAllManga() {
         viewModelScope.launch {
             try {
-                val mangaList = _repository.getMangaList()
-                Log.d("MANGA_VIEWMODEL", "Total mangas fetched: ${mangaList.size}")
-
-                val uiModelList = mangaList.map { manga ->
+                val mangaLists = _repository.getMangaList()
+                Log.d("MANGA_VIEWMODEL", "Total mangas fetched: ${mangaLists.size}")
+                val uiModelList = mangaLists.map { manga ->
                     val coverId = manga.relationships.firstOrNull { it.type == "cover_art" }?.id
                     val imageUrl = if (coverId != null) {
                         try {
@@ -58,6 +69,206 @@ class MangaViewModel : ViewModel() {
                 }
 
                 _mangaList.value = uiModelList
+                Log.d("MANGA_VIEWMODEL", "UI Model list size: ${uiModelList.size}")
+
+            } catch (e: Exception) {
+                Log.e("MANGA_VIEWMODEL", "Error fetching mangas", e)
+            }
+        }
+    }
+
+    fun getTopAiredManga(){
+        viewModelScope.launch {
+            try {
+                val mangaLists = _repository.getTopAiredManga()
+                Log.d("MANGA_VIEWMODEL", "Total mangas fetched: ${mangaLists.size}")
+
+                val uiModelList = mangaLists.map { manga ->
+                    val coverId = manga.relationships.firstOrNull { it.type == "cover_art" }?.id
+                    val imageUrl = if (coverId != null) {
+                        try {
+                            val fileName = _repository.fetchMangaCover(coverId)
+                            "https://uploads.mangadex.org/covers/${manga.id}/$fileName"
+                        } catch (e: Exception) {
+                            Log.e("MANGA_VIEWMODEL", "Cover fetch failed for ${manga.id}", e)
+                            "https://via.placeholder.com/150"
+                        }
+                    } else {
+                        Log.e("MANGA_VIEWMODEL", "No cover_art for ${manga.id}")
+                        "https://via.placeholder.com/150"
+                    }
+
+                    val title = manga.attributes.title["en"] ?: "No Title"
+                    val description = manga.attributes.description["en"] ?: "No Description"
+                    val status = manga.attributes.status ?: "Unknown"
+                    val year = manga.attributes.year ?: 0
+                    val contentRating = manga.attributes.contentRating ?: "Unrated"
+                    val id = manga.id
+                    val isLocked = manga.attributes.isLocked ?: false
+
+                    MangaUiModel(
+                        title = title,
+                        description = description,
+                        status = status,
+                        year = year,
+                        contentRating = contentRating,
+                        id = id,
+                        isLocked = isLocked,
+                        imgUrl = imageUrl
+                    )
+                }
+
+                _getTopAired.value = uiModelList
+                Log.d("MANGA_VIEWMODEL", "UI Model list size: ${uiModelList.size}")
+
+            } catch (e: Exception) {
+                Log.e("MANGA_VIEWMODEL", "Error fetching mangas", e)
+            }
+        }
+    }
+
+    fun getFavouriteManga(){
+        viewModelScope.launch {
+            try {
+                val mangaLists = _repository.getFavouriteManga()
+                Log.d("MANGA_VIEWMODEL", "Total mangas fetched: ${mangaLists.size}")
+
+                val uiModelList = mangaLists.map { manga ->
+                    val coverId = manga.relationships.firstOrNull { it.type == "cover_art" }?.id
+                    val imageUrl = if (coverId != null) {
+                        try {
+                            val fileName = _repository.fetchMangaCover(coverId)
+                            "https://uploads.mangadex.org/covers/${manga.id}/$fileName"
+                        } catch (e: Exception) {
+                            Log.e("MANGA_VIEWMODEL", "Cover fetch failed for ${manga.id}", e)
+                            "https://via.placeholder.com/150"
+                        }
+                    } else {
+                        Log.e("MANGA_VIEWMODEL", "No cover_art for ${manga.id}")
+                        "https://via.placeholder.com/150"
+                    }
+
+                    val title = manga.attributes.title["en"] ?: "No Title"
+                    val description = manga.attributes.description["en"] ?: "No Description"
+                    val status = manga.attributes.status ?: "Unknown"
+                    val year = manga.attributes.year ?: 0
+                    val contentRating = manga.attributes.contentRating ?: "Unrated"
+                    val id = manga.id
+                    val isLocked = manga.attributes.isLocked ?: false
+
+                    MangaUiModel(
+                        title = title,
+                        description = description,
+                        status = status,
+                        year = year,
+                        contentRating = contentRating,
+                        id = id,
+                        isLocked = isLocked,
+                        imgUrl = imageUrl
+                    )
+                }
+
+                _getFavourite.value = uiModelList
+                Log.d("MANGA_VIEWMODEL", "UI Model list size: ${uiModelList.size}")
+
+            } catch (e: Exception) {
+                Log.e("MANGA_VIEWMODEL", "Error fetching mangas", e)
+            }
+        }
+    }
+
+    fun getUpdatedManga(){
+        viewModelScope.launch {
+            try {
+                val mangaLists = _repository.getUpdatedManga()
+                Log.d("MANGA_VIEWMODEL", "Total mangas fetched: ${mangaLists.size}")
+
+                val uiModelList = mangaLists.map { manga ->
+                    val coverId = manga.relationships.firstOrNull { it.type == "cover_art" }?.id
+                    val imageUrl = if (coverId != null) {
+                        try {
+                            val fileName = _repository.fetchMangaCover(coverId)
+                            "https://uploads.mangadex.org/covers/${manga.id}/$fileName"
+                        } catch (e: Exception) {
+                            Log.e("MANGA_VIEWMODEL", "Cover fetch failed for ${manga.id}", e)
+                            "https://via.placeholder.com/150"
+                        }
+                    } else {
+                        Log.e("MANGA_VIEWMODEL", "No cover_art for ${manga.id}")
+                        "https://via.placeholder.com/150"
+                    }
+
+                    val title = manga.attributes.title["en"] ?: "No Title"
+                    val description = manga.attributes.description["en"] ?: "No Description"
+                    val status = manga.attributes.status ?: "Unknown"
+                    val year = manga.attributes.year ?: 0
+                    val contentRating = manga.attributes.contentRating ?: "Unrated"
+                    val id = manga.id
+                    val isLocked = manga.attributes.isLocked ?: false
+
+                    MangaUiModel(
+                        title = title,
+                        description = description,
+                        status = status,
+                        year = year,
+                        contentRating = contentRating,
+                        id = id,
+                        isLocked = isLocked,
+                        imgUrl = imageUrl
+                    )
+                }
+
+                _getUpdated.value = uiModelList
+                Log.d("MANGA_VIEWMODEL", "UI Model list size: ${uiModelList.size}")
+
+            } catch (e: Exception) {
+                Log.e("MANGA_VIEWMODEL", "Error fetching mangas", e)
+            }
+        }
+    }
+
+    fun getNewManga(){
+        viewModelScope.launch {
+            try {
+                val mangaLists = _repository.getNewManga()
+                Log.d("MANGA_VIEWMODEL", "Total mangas fetched: ${mangaLists.size}")
+
+                val uiModelList = mangaLists.map { manga ->
+                    val coverId = manga.relationships.firstOrNull { it.type == "cover_art" }?.id
+                    val imageUrl = if (coverId != null) {
+                        try {
+                            val fileName = _repository.fetchMangaCover(coverId)
+                            "https://uploads.mangadex.org/covers/${manga.id}/$fileName"
+                        } catch (e: Exception) {
+                            Log.e("MANGA_VIEWMODEL", "Cover fetch failed for ${manga.id}", e)
+                            "https://via.placeholder.com/150"
+                        }
+                    } else {
+                        Log.e("MANGA_VIEWMODEL", "No cover_art for ${manga.id}")
+                        "https://via.placeholder.com/150"
+                    }
+
+                    val title = manga.attributes.title["en"] ?: "No Title"
+                    val description = manga.attributes.description["en"] ?: "No Description"
+                    val status = manga.attributes.status ?: "Unknown"
+                    val year = manga.attributes.year ?: 0
+                    val contentRating = manga.attributes.contentRating ?: "Unrated"
+                    val id = manga.id
+                    val isLocked = manga.attributes.isLocked ?: false
+
+                    MangaUiModel(
+                        title = title,
+                        description = description,
+                        status = status,
+                        year = year,
+                        contentRating = contentRating,
+                        id = id,
+                        isLocked = isLocked,
+                        imgUrl = imageUrl
+                    )
+                }
+
+                _getNew.value = uiModelList
                 Log.d("MANGA_VIEWMODEL", "UI Model list size: ${uiModelList.size}")
 
             } catch (e: Exception) {

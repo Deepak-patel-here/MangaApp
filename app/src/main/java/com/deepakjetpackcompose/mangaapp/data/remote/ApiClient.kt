@@ -32,7 +32,7 @@ object ApiClient {
         return response.data
     }
 
-    private fun parameter(string: String, i: Int) {}
+
 
     suspend fun getMangaCover(coverId: String): String {
         val responseText = client.get("https://api.mangadex.org/cover/$coverId").bodyAsText()
@@ -44,23 +44,51 @@ object ApiClient {
 
         return fileName
     }
+
+    suspend fun getTopAiredManga():List<Manga>{
+        val response: MangaDexResponse=client.get("https://api.mangadex.org/manga") {
+            parameter("status[]", "ongoing")
+            parameter("order[followedCount]", "desc")
+            parameter("limit", 10)
+        }.body()
+        return response.data
+    }
+
+    suspend fun getFavouriteManga():List<Manga>{
+        val response: MangaDexResponse=client.get("https://api.mangadex.org/manga") {
+            parameter("order[followedCount]", "desc")
+            parameter("limit", 10)
+        }.body()
+        return response.data
+    }
+
+    suspend fun getRecentlyUpdatedManga():List<Manga>{
+        val response: MangaDexResponse=client.get("https://api.mangadex.org/manga") {
+            parameter("order[latestUploadedChapter]", "desc")
+            parameter("limit", 10)
+        }.body()
+        return response.data
+    }
+
+    suspend fun getNewlyReleasedManga():List<Manga>{
+        val response: MangaDexResponse=client.get("https://api.mangadex.org/manga") {
+            parameter("order[createdAt]", "desc")
+            parameter("limit", 10)
+        }.body()
+        return response.data
+    }
+
+    suspend fun getChaptersForManga(mangaId: String): {
+        val response= client.get("https://api.mangadex.org/chapter") {
+            parameter("manga", mangaId)
+            parameter("translatedLanguage[]", "en")
+            parameter("order[chapter]", "asc")
+            parameter("limit", 100)
+        }
+    }
 }
 
 fun main()= runBlocking {
-    val mangas = ApiClient.getAllMangas()
+    val mangas = ApiClient.getTopAiredManga()
 
-    // Take the first manga
-    val manga = mangas[0]
-
-    // Find the relationship with type == "cover_art"
-    val coverId = manga.relationships.firstOrNull { it.type == "cover_art" }?.id
-
-    if (coverId != null) {
-        val fileName = ApiClient.getMangaCover(coverId)
-        val imageUrl = "https://uploads.mangadex.org/covers/${manga.id}/$fileName"
-
-        println("Image URL: $imageUrl")
-    } else {
-        println("Cover ID not found.")
-    }
 }

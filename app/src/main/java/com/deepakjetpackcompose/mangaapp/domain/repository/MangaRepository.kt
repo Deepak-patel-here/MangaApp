@@ -9,6 +9,22 @@ class MangaRepository {
         return ApiClient.getAllMangas()
     }
 
+    suspend fun getTopAiredManga(): List<Manga>{
+        return ApiClient.getTopAiredManga()
+    }
+
+    suspend fun getFavouriteManga(): List<Manga>{
+        return ApiClient.getFavouriteManga()
+    }
+
+    suspend fun getUpdatedManga(): List<Manga>{
+        return ApiClient.getRecentlyUpdatedManga()
+    }
+
+    suspend fun getNewManga(): List<Manga>{
+        return ApiClient.getNewlyReleasedManga()
+    }
+
     suspend fun fetchMangaCover(coverId: String): String{
         return ApiClient.getMangaCover(coverId = coverId)
     }

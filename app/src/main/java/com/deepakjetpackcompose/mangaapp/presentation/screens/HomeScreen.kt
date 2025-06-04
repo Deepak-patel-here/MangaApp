@@ -4,7 +4,12 @@ package com.deepakjetpackcompose.mangaapp.presentation.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -16,6 +21,11 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.deepakjetpackcompose.mangaapp.presentation.component.ListOfFavourite
+import com.deepakjetpackcompose.mangaapp.presentation.component.ListOfNewManga
+import com.deepakjetpackcompose.mangaapp.presentation.component.ListOfTopAiring
+import com.deepakjetpackcompose.mangaapp.presentation.component.ListOfUpdatedManga
 import com.deepakjetpackcompose.mangaapp.presentation.component.MangaImagePager
 import com.deepakjetpackcompose.mangaapp.presentation.component.MangaTopBar
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
@@ -25,6 +35,10 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 @Composable
 fun HomeScreen(mangaViewModel: MangaViewModel,modifier: Modifier = Modifier) {
     val mangaList =mangaViewModel.mangaList.collectAsState()
+    val topAiredManga=mangaViewModel.getTopAired.collectAsState()
+    val favouriteManga=mangaViewModel.getFavourite.collectAsState()
+    val updatedManga=mangaViewModel.getUpdated.collectAsState()
+    val newManga=mangaViewModel.getNew.collectAsState()
     val systemController = rememberSystemUiController()
 
     SideEffect {
@@ -40,6 +54,10 @@ fun HomeScreen(mangaViewModel: MangaViewModel,modifier: Modifier = Modifier) {
     }
     LaunchedEffect(Unit) {
         mangaViewModel.getAllManga()
+        mangaViewModel.getTopAiredManga()
+        mangaViewModel.getFavouriteManga()
+        mangaViewModel.getNewManga()
+        mangaViewModel.getUpdatedManga()
     }
 
     Column(
@@ -47,9 +65,10 @@ fun HomeScreen(mangaViewModel: MangaViewModel,modifier: Modifier = Modifier) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState()
             )
-            .background(Color.Black)
+            .background(Color(0xFF1D1D1D))
+            .navigationBarsPadding()
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxWidth()) {
             // Background image slider
             MangaImagePager(mangaList = mangaList.value)
 
@@ -57,6 +76,20 @@ fun HomeScreen(mangaViewModel: MangaViewModel,modifier: Modifier = Modifier) {
             MangaTopBar(modifier = Modifier.statusBarsPadding())
 
         }
+        Spacer(Modifier.height(30.dp))
+        //top Airing manga
+        ListOfTopAiring(topAiredManga = topAiredManga.value,modifier= Modifier.padding(start = 20.dp))
+
+        Spacer(Modifier.height(20.dp))
+        //top favourite manga
+        ListOfFavourite(favourite = favouriteManga.value,modifier= Modifier.padding(start = 20.dp))
+        Spacer(Modifier.height(20.dp))
+
+        ListOfNewManga(newly = newManga.value,modifier= Modifier.padding(start = 20.dp))
+        Spacer(Modifier.height(20.dp))
+
+        ListOfUpdatedManga(updated = updatedManga.value,modifier= Modifier.padding(start = 20.dp))
+        Spacer(Modifier.height(15.dp))
     }
 
 }
