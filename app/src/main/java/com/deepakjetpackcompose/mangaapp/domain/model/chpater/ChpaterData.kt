@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ChapterData(
-    val baseUrl: String,
-    val chapter: Chapter,
-    val result: String
+    val baseUrl: String?=null,
+    val chapter: Chapter?=null,
+    val result: String?=null
 )

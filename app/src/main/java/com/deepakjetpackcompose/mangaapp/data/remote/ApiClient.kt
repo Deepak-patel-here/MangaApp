@@ -108,7 +108,7 @@ fun main()= runBlocking {
         println(chapter.id)
     }
     val chapter= ApiClient.getChapterData(chapters[0].id)
-    println("${chapter.baseUrl}/data/${chapter.chapter.hash}/${chapter.chapter.data[0]}")
+    println("${chapter.baseUrl}/data/${chapter.chapter?.hash}/${chapter.chapter?.data?.get(0)}")
 
 
 

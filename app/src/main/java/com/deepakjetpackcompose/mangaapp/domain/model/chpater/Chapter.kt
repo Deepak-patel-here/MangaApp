@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Chapter(
-    val data: List<String>,
-    val dataSaver: List<String>,
-    val hash: String
+    val data: List<String>?=emptyList(),
+    val dataSaver: List<String>?=emptyList(),
+    val hash: String?=null
 )

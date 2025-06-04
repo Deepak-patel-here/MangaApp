@@ -3,8 +3,12 @@ package com.deepakjetpackcompose.mangaapp.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.deepakjetpackcompose.mangaapp.domain.model.ChapterModel
 import com.deepakjetpackcompose.mangaapp.domain.model.Manga
 import com.deepakjetpackcompose.mangaapp.domain.model.MangaUiModel
+import com.deepakjetpackcompose.mangaapp.domain.model.chpater.Chapter
+import com.deepakjetpackcompose.mangaapp.domain.model.chpater.ChapterData
+import com.deepakjetpackcompose.mangaapp.domain.model.responseconverter.ChapterResponse
 import com.deepakjetpackcompose.mangaapp.domain.repository.MangaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +30,12 @@ class MangaViewModel : ViewModel() {
 
     private val _getNew= MutableStateFlow<List<MangaUiModel>>(emptyList())
     val getNew: StateFlow<List<MangaUiModel>> = _getNew
+
+    private val _getChapters= MutableStateFlow<List<ChapterResponse>>(emptyList())
+    val getChapters: StateFlow<List<ChapterResponse>> = _getChapters
+
+    private val _chapterImages = MutableStateFlow<ChapterData>(ChapterData())
+    val chapterImages: StateFlow<ChapterData> = _chapterImages
 
 
     fun getAllManga() {
@@ -273,6 +283,45 @@ class MangaViewModel : ViewModel() {
 
             } catch (e: Exception) {
                 Log.e("MANGA_VIEWMODEL", "Error fetching mangas", e)
+            }
+        }
+    }
+
+
+    fun getMangaChapter(mangaId:String){
+        viewModelScope.launch {
+            try {
+                val chapterList=_repository.getAllChapter(mangaId = mangaId)
+
+                val chapterModelList=chapterList.map { ch->
+                    val id=ch.id
+                    val chapter = ch.attributes.chapter ?: "Unknown"
+                    val volume = ch.attributes.volume ?: "N/A"
+                    val pages = ch.attributes.pages ?: 0
+
+                    ChapterResponse(
+                        id=id,
+                        chapter = chapter,
+                        volume = volume,
+                        pages=pages
+                    )
+                }
+
+                _getChapters.value=chapterModelList
+
+            } catch (e: Exception) {
+                Log.e("MANGA_VIEWMODEL", "Error fetching chapters", e)
+            }
+        }
+    }
+
+    fun getChapterImages(chapterId:String){
+        viewModelScope.launch {
+            try {
+                _chapterImages.value=_repository.fetchChapterPanel(chapterId=chapterId)
+            }catch (e: Exception){
+                Log.e("MANGA_VIEWMODEL", "Error fetching chapters", e)
+
             }
         }
     }

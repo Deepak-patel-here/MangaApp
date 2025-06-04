@@ -1,7 +1,9 @@
 package com.deepakjetpackcompose.mangaapp.domain.repository
 
 import com.deepakjetpackcompose.mangaapp.data.remote.ApiClient
+import com.deepakjetpackcompose.mangaapp.domain.model.Data
 import com.deepakjetpackcompose.mangaapp.domain.model.Manga
+import com.deepakjetpackcompose.mangaapp.domain.model.chpater.ChapterData
 
 class MangaRepository {
 
@@ -23,6 +25,15 @@ class MangaRepository {
 
     suspend fun getNewManga(): List<Manga>{
         return ApiClient.getNewlyReleasedManga()
+    }
+
+    suspend fun getAllChapter(mangaId:String): List<Data>{
+        return ApiClient.getChaptersForManga(mangaId = mangaId)
+    }
+
+    suspend fun fetchChapterPanel(chapterId:String): ChapterData{
+        return ApiClient.getChapterData(chapterId=chapterId)
+
     }
 
     suspend fun fetchMangaCover(coverId: String): String{

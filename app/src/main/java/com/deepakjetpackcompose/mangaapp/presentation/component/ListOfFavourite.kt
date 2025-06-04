@@ -20,10 +20,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.deepakjetpackcompose.mangaapp.domain.model.MangaUiModel
+import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
 
 @Composable
-fun ListOfFavourite(favourite:List<MangaUiModel>, modifier: Modifier = Modifier) {
+fun ListOfFavourite(mangaViewModel: MangaViewModel,navController: NavController,favourite:List<MangaUiModel>, modifier: Modifier = Modifier) {
 
     Column (modifier = modifier.fillMaxWidth()){
         Row (modifier = Modifier.fillMaxWidth().padding(end = 20.dp)) {
@@ -51,7 +54,7 @@ fun ListOfFavourite(favourite:List<MangaUiModel>, modifier: Modifier = Modifier)
         Spacer(Modifier.height(10.dp))
         LazyRow(modifier = Modifier.fillMaxWidth()) {
             items(favourite) { item ->
-                MangaPanel(manga = item)
+                MangaPanel(mangaViewModel = mangaViewModel,navController=navController,manga = item)
                 Spacer(Modifier.width(10.dp))
             }
         }

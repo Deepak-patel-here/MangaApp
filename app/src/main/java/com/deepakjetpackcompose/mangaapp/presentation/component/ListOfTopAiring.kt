@@ -19,11 +19,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.deepakjetpackcompose.mangaapp.domain.model.MangaUiModel
+import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
 import okhttp3.internal.notify
 
 @Composable
-fun ListOfTopAiring(topAiredManga:List<MangaUiModel>, modifier: Modifier = Modifier) {
+fun ListOfTopAiring(mangaViewModel: MangaViewModel,navController: NavController,topAiredManga:List<MangaUiModel>, modifier: Modifier = Modifier) {
 
     Column (modifier = modifier.fillMaxWidth()){
         Row (modifier = Modifier.fillMaxWidth().padding(end = 20.dp)) {
@@ -51,7 +54,7 @@ fun ListOfTopAiring(topAiredManga:List<MangaUiModel>, modifier: Modifier = Modif
         Spacer(Modifier.height(10.dp))
         LazyRow(modifier = Modifier.fillMaxWidth()) {
             items(topAiredManga) { item ->
-                MangaPanel(manga = item)
+                MangaPanel(mangaViewModel = mangaViewModel,navController=navController,manga = item)
                 Spacer(Modifier.width(10.dp))
             }
         }

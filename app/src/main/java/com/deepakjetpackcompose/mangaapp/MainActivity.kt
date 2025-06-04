@@ -5,16 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
-import com.deepakjetpackcompose.mangaapp.presentation.screens.HomeScreen
-import com.deepakjetpackcompose.mangaapp.presentation.screens.TestingScreen
+import com.deepakjetpackcompose.mangaapp.data.navigation.Navigation
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
 import com.deepakjetpackcompose.mangaapp.ui.theme.MangaAppTheme
 
@@ -28,7 +23,7 @@ class MainActivity : ComponentActivity() {
             val viewModel: MangaViewModel by viewModels()
             MangaAppTheme {
                 Scaffold { innerPadding->
-                    HomeScreen(mangaViewModel = viewModel, modifier = Modifier.padding(innerPadding))
+                    Navigation(mangaViewModel = viewModel, modifier = Modifier.padding(innerPadding))
                 }
             }
         }

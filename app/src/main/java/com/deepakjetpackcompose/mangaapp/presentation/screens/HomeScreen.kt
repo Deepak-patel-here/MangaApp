@@ -22,6 +22,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.deepakjetpackcompose.mangaapp.presentation.component.ListOfFavourite
 import com.deepakjetpackcompose.mangaapp.presentation.component.ListOfNewManga
 import com.deepakjetpackcompose.mangaapp.presentation.component.ListOfTopAiring
@@ -33,7 +35,11 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(mangaViewModel: MangaViewModel,modifier: Modifier = Modifier) {
+fun HomeScreen(
+    mangaViewModel: MangaViewModel,
+    modifier: Modifier = Modifier,
+    navController: NavController
+) {
     val mangaList =mangaViewModel.mangaList.collectAsState()
     val topAiredManga=mangaViewModel.getTopAired.collectAsState()
     val favouriteManga=mangaViewModel.getFavourite.collectAsState()
@@ -78,17 +84,17 @@ fun HomeScreen(mangaViewModel: MangaViewModel,modifier: Modifier = Modifier) {
         }
         Spacer(Modifier.height(30.dp))
         //top Airing manga
-        ListOfTopAiring(topAiredManga = topAiredManga.value,modifier= Modifier.padding(start = 20.dp))
+        ListOfTopAiring(mangaViewModel = mangaViewModel,topAiredManga = topAiredManga.value,navController=navController,modifier= Modifier.padding(start = 20.dp))
 
         Spacer(Modifier.height(20.dp))
         //top favourite manga
-        ListOfFavourite(favourite = favouriteManga.value,modifier= Modifier.padding(start = 20.dp))
+        ListOfFavourite(mangaViewModel = mangaViewModel,favourite = favouriteManga.value,navController=navController,modifier= Modifier.padding(start = 20.dp))
         Spacer(Modifier.height(20.dp))
 
-        ListOfNewManga(newly = newManga.value,modifier= Modifier.padding(start = 20.dp))
+        ListOfNewManga(mangaViewModel = mangaViewModel,newly = newManga.value,navController=navController,modifier= Modifier.padding(start = 20.dp))
         Spacer(Modifier.height(20.dp))
 
-        ListOfUpdatedManga(updated = updatedManga.value,modifier= Modifier.padding(start = 20.dp))
+        ListOfUpdatedManga(mangaViewModel = mangaViewModel,updated = updatedManga.value,navController=navController,modifier= Modifier.padding(start = 20.dp))
         Spacer(Modifier.height(15.dp))
     }
 
