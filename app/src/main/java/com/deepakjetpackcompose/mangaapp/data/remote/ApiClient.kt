@@ -51,35 +51,35 @@ object ApiClient {
         return fileName
     }
 
-    suspend fun getTopAiredManga():List<Manga>{
+    suspend fun getTopAiredManga(limit:Int=10):List<Manga>{
         val response: MangaDexResponse=client.get("https://api.mangadex.org/manga") {
             parameter("status[]", "ongoing")
             parameter("order[followedCount]", "desc")
-            parameter("limit", 10)
+            parameter("limit", limit)
         }.body()
         return response.data
     }
 
-    suspend fun getFavouriteManga():List<Manga>{
+    suspend fun getFavouriteManga(limit:Int=10):List<Manga>{
         val response: MangaDexResponse=client.get("https://api.mangadex.org/manga") {
             parameter("order[followedCount]", "desc")
-            parameter("limit", 10)
+            parameter("limit", limit)
         }.body()
         return response.data
     }
 
-    suspend fun getRecentlyUpdatedManga():List<Manga>{
+    suspend fun getRecentlyUpdatedManga(limit:Int=10):List<Manga>{
         val response: MangaDexResponse=client.get("https://api.mangadex.org/manga") {
             parameter("order[latestUploadedChapter]", "desc")
-            parameter("limit", 10)
+            parameter("limit", limit)
         }.body()
         return response.data
     }
 
-    suspend fun getNewlyReleasedManga():List<Manga>{
+    suspend fun getNewlyReleasedManga(limit:Int=10):List<Manga>{
         val response: MangaDexResponse=client.get("https://api.mangadex.org/manga") {
             parameter("order[createdAt]", "desc")
-            parameter("limit", 10)
+            parameter("limit", limit)
         }.body()
         return response.data
     }
@@ -118,7 +118,7 @@ object ApiClient {
 }
 
 fun main()= runBlocking {
-    val mangas = ApiClient.getFavouriteManga()
+    val mangas = ApiClient.getFavouriteManga(limit=10)
     val manga=mangas[0]
     println(manga.attributes.title)
     val chapters= ApiClient.getChaptersForManga(manga.id)

@@ -1,5 +1,6 @@
 package com.deepakjetpackcompose.mangaapp.presentation.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,15 +22,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.deepakjetpackcompose.mangaapp.data.navigation.NavigationHelper
 import com.deepakjetpackcompose.mangaapp.domain.model.MangaUiModel
+import com.deepakjetpackcompose.mangaapp.presentation.screens.SeeAllScreen
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
 import okhttp3.internal.notify
 
 @Composable
 fun ListOfTopAiring(mangaViewModel: MangaViewModel,navController: NavController,topAiredManga:List<MangaUiModel>, modifier: Modifier = Modifier) {
-
+    val title="Top Airing"
+    val code=1
     Column (modifier = modifier.fillMaxWidth()){
-        Row (modifier = Modifier.fillMaxWidth().padding(end = 20.dp)) {
+        Row (modifier = Modifier
+            .fillMaxWidth()
+            .padding(end = 20.dp)) {
             Text(
                 text = "Top Airing",
                 maxLines = 1,
@@ -48,7 +54,11 @@ fun ListOfTopAiring(mangaViewModel: MangaViewModel,navController: NavController,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 color = Color.Red,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
+                modifier = Modifier.clickable(onClick = {
+                    mangaViewModel.getTopAiredManga(20)
+                    navController.navigate("${NavigationHelper.SeeAllScreen.route}/$title/$code")
+                })
             )
         }
         Spacer(Modifier.height(10.dp))

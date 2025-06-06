@@ -1,5 +1,6 @@
 package com.deepakjetpackcompose.mangaapp.presentation.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,12 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.deepakjetpackcompose.mangaapp.data.navigation.NavigationHelper
 import com.deepakjetpackcompose.mangaapp.domain.model.MangaUiModel
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
 
 @Composable
 fun ListOfUpdatedManga(mangaViewModel: MangaViewModel,navController: NavController,updated:List<MangaUiModel>, modifier: Modifier = Modifier) {
-
+    val title="Updated Manga"
+    val code=4
     Column (modifier = modifier.fillMaxWidth()){
         Row (modifier = Modifier.fillMaxWidth().padding(end = 20.dp)) {
             Text(
@@ -47,7 +50,11 @@ fun ListOfUpdatedManga(mangaViewModel: MangaViewModel,navController: NavControll
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 color = Color.Red,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
+                modifier = Modifier.clickable(onClick = {
+                    mangaViewModel.getUpdatedManga(20)
+                    navController.navigate("${NavigationHelper.SeeAllScreen.route}/$title/$code")
+                })
             )
         }
         Spacer(Modifier.height(10.dp))

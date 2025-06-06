@@ -77,7 +77,7 @@ fun HomeScreen(
             mangaViewModel.getAllManga()
         }
         if (mangaViewModel.getTopAired.value.isEmpty()) {
-            mangaViewModel.getTopAiredManga()
+            mangaViewModel.getTopAiredManga(limit = 10)
         }
         if (mangaViewModel.getFavourite.value.isEmpty()) {
             mangaViewModel.getFavouriteManga()

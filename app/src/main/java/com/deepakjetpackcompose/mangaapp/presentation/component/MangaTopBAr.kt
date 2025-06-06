@@ -27,7 +27,7 @@ import androidx.navigation.NavController
 import com.deepakjetpackcompose.mangaapp.R
 import com.deepakjetpackcompose.mangaapp.data.navigation.NavigationHelper
 
-@Preview
+
 @Composable
 fun MangaTopBar(navController: NavController,modifier: Modifier = Modifier) {
 

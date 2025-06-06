@@ -47,6 +47,7 @@ class MangaViewModel : ViewModel() {
     val searchMangaList: StateFlow<List<MangaUiModel>> = _searchMangaList
 
 
+
     fun getAllManga() {
         _isLoading.value=true
         viewModelScope.launch {
@@ -100,10 +101,10 @@ class MangaViewModel : ViewModel() {
         }
     }
 
-    fun getTopAiredManga(){
+    fun getTopAiredManga(limit:Int=10){
         viewModelScope.launch {
             try {
-                val mangaLists = _repository.getTopAiredManga()
+                val mangaLists = _repository.getTopAiredManga(limit=limit)
                 Log.d("MANGA_VIEWMODEL", "Total mangas fetched: ${mangaLists.size}")
 
                 val uiModelList = mangaLists.map { manga ->
@@ -150,10 +151,10 @@ class MangaViewModel : ViewModel() {
         }
     }
 
-    fun getFavouriteManga(){
+    fun getFavouriteManga(limit:Int=10){
         viewModelScope.launch {
             try {
-                val mangaLists = _repository.getFavouriteManga()
+                val mangaLists = _repository.getFavouriteManga(limit=limit)
                 Log.d("MANGA_VIEWMODEL", "Total mangas fetched: ${mangaLists.size}")
 
                 val uiModelList = mangaLists.map { manga ->
@@ -200,10 +201,10 @@ class MangaViewModel : ViewModel() {
         }
     }
 
-    fun getUpdatedManga(){
+    fun getUpdatedManga(limit:Int=10){
         viewModelScope.launch {
             try {
-                val mangaLists = _repository.getUpdatedManga()
+                val mangaLists = _repository.getUpdatedManga(limit=limit)
                 Log.d("MANGA_VIEWMODEL", "Total mangas fetched: ${mangaLists.size}")
 
                 val uiModelList = mangaLists.map { manga ->
@@ -250,10 +251,10 @@ class MangaViewModel : ViewModel() {
         }
     }
 
-    fun getNewManga(){
+    fun getNewManga(limit:Int=10){
         viewModelScope.launch {
             try {
-                val mangaLists = _repository.getNewManga()
+                val mangaLists = _repository.getNewManga(limit = limit)
                 Log.d("MANGA_VIEWMODEL", "Total mangas fetched: ${mangaLists.size}")
 
                 val uiModelList = mangaLists.map { manga ->

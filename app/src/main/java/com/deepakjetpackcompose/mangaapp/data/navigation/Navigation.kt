@@ -12,8 +12,8 @@ import com.deepakjetpackcompose.mangaapp.presentation.screens.MangaChapterScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.MyApp
 import com.deepakjetpackcompose.mangaapp.presentation.screens.ReadScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.SearchScreen
+import com.deepakjetpackcompose.mangaapp.presentation.screens.SeeAllScreen
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
-import okio.Utf8
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
@@ -61,6 +61,21 @@ fun Navigation(modifier: Modifier = Modifier, mangaViewModel: MangaViewModel) {
 
         composable (route = NavigationHelper.MyApp.route){
             MyApp(mangaViewModel = mangaViewModel, navController = navController, modifier = modifier)
+        }
+
+        composable (route = "${NavigationHelper.SeeAllScreen.route}/{title}/{id}",
+            arguments = listOf(
+                navArgument ("title"){
+                    type= NavType.StringType
+                },
+                navArgument ("id"){
+                    type= NavType.IntType
+                }
+            )
+        ){backStackEntry->
+            val title=backStackEntry.arguments?.getString("title")?:"Unknown"
+            val code=backStackEntry.arguments?.getInt("id")?:0
+            SeeAllScreen(mangaViewModel = mangaViewModel, navController = navController, title = title, code = code, modifier = modifier)
         }
 
 

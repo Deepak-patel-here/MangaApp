@@ -6,4 +6,5 @@ sealed class NavigationHelper(val route:String) {
     object ReadScreen: NavigationHelper(route = "read")
     object SearchScreen: NavigationHelper(route = "search")
     object MyApp: NavigationHelper(route = "app")
+    object SeeAllScreen: NavigationHelper(route = "see")
 }

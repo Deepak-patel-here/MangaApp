@@ -11,20 +11,20 @@ class MangaRepository {
         return ApiClient.getAllMangas()
     }
 
-    suspend fun getTopAiredManga(): List<Manga>{
-        return ApiClient.getTopAiredManga()
+    suspend fun getTopAiredManga(limit:Int): List<Manga>{
+        return ApiClient.getTopAiredManga(limit=limit)
     }
 
-    suspend fun getFavouriteManga(): List<Manga>{
-        return ApiClient.getFavouriteManga()
+    suspend fun getFavouriteManga(limit:Int): List<Manga>{
+        return ApiClient.getFavouriteManga(limit = limit)
     }
 
-    suspend fun getUpdatedManga(): List<Manga>{
-        return ApiClient.getRecentlyUpdatedManga()
+    suspend fun getUpdatedManga(limit:Int): List<Manga>{
+        return ApiClient.getRecentlyUpdatedManga(limit = limit)
     }
 
-    suspend fun getNewManga(): List<Manga>{
-        return ApiClient.getNewlyReleasedManga()
+    suspend fun getNewManga(limit:Int): List<Manga>{
+        return ApiClient.getNewlyReleasedManga(limit = limit)
     }
 
     suspend fun getAllChapter(mangaId:String): List<Data>{
