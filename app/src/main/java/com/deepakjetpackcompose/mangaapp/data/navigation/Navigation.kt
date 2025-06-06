@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import com.deepakjetpackcompose.mangaapp.presentation.screens.HomeScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.MangaChapterScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.ReadScreen
+import com.deepakjetpackcompose.mangaapp.presentation.screens.SearchScreen
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
@@ -45,6 +46,10 @@ fun Navigation(modifier: Modifier = Modifier, mangaViewModel: MangaViewModel) {
 
         composable (route = NavigationHelper.ReadScreen.route){
             ReadScreen(mangaViewModel = mangaViewModel, navController = navController, modifier = modifier)
+        }
+
+        composable (route = NavigationHelper.SearchScreen.route){
+            SearchScreen(mangaViewModel = mangaViewModel, navController = navController, modifier = modifier)
         }
     }
 

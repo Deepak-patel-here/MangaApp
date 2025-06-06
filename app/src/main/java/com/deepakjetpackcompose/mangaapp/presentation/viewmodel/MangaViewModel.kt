@@ -350,6 +350,7 @@ class MangaViewModel : ViewModel() {
 
     fun searchManga(query:String){
         _isLoading.value=true
+        _searchMangaList.value=emptyList()
         viewModelScope.launch {
             try {
                 val searchList= _repository.searchManga(query=query)
@@ -395,6 +396,10 @@ class MangaViewModel : ViewModel() {
                 _isLoading.value=false
             }
         }
+    }
+
+    fun clearSearchList(){
+        _searchMangaList.value=emptyList()
     }
 
 

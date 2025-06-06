@@ -134,7 +134,7 @@ fun HomeScreen(
                 )
 
                 // Transparent TopAppBar
-                MangaTopBar(modifier = Modifier.statusBarsPadding())
+                MangaTopBar(navController = navController, modifier = Modifier.statusBarsPadding())
 
             }
             Spacer(Modifier.height(30.dp))
