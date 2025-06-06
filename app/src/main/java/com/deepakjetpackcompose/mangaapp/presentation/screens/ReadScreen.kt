@@ -61,7 +61,7 @@ fun ReadScreen(
             darkIcons = false
         )
     }
-    if (chapter == null || chapter.data.isNullOrEmpty() || baseUrl?.isBlank() == true) {
+    if (chapter == null || chapter.data.isNullOrEmpty() || baseUrl?.isBlank() == true || chapter.dataSaver.isNullOrEmpty()) {
         Column(
             modifier = modifier.fillMaxSize().background(Color(0xFF1D1D1D)),
             horizontalAlignment = Alignment.CenterHorizontally,

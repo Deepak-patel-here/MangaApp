@@ -1,10 +1,12 @@
 package com.deepakjetpackcompose.mangaapp.presentation.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,10 +40,12 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -52,6 +56,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.deepakjetpackcompose.mangaapp.R
 import com.deepakjetpackcompose.mangaapp.data.navigation.NavigationHelper
 import com.deepakjetpackcompose.mangaapp.presentation.component.ChaptersComponent
@@ -69,6 +78,17 @@ fun MangaChapterScreen(
     modifier: Modifier = Modifier
 ) {
     val getChapters = mangaViewModel.getChapters.collectAsState()
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loader))
+    val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
+    val context= LocalContext.current
+    val isLoading=mangaViewModel.isLoading.collectAsState()
+    val chapterError by mangaViewModel.chapterError.collectAsState()
+
+    LaunchedEffect(chapterError) {
+        chapterError?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -139,8 +159,13 @@ fun MangaChapterScreen(
             ) {
                 Button(
                     onClick = {
-                        mangaViewModel.getChapterImages(getChapters.value[0].id)
-                        navController.navigate(NavigationHelper.ReadScreen.route)
+                        if(getChapters.value.isEmpty()){
+                            Toast.makeText(context, "Sorry, but the chapter is unavailable", Toast.LENGTH_SHORT).show()
+                        }
+                        else {
+                            mangaViewModel.getChapterImages(getChapters.value[0].id)
+                            navController.navigate(NavigationHelper.ReadScreen.route)
+                        }
                     },
                     modifier = Modifier
                         .width(100.dp)
@@ -150,7 +175,7 @@ fun MangaChapterScreen(
                         contentColor = Color.White
                     )
                 ) {
-                    Text("Read")
+                    Text("Read", color = Color.White, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.width(10.dp))
                    Icon(
                         painter = painterResource(R.drawable.read),
@@ -174,7 +199,7 @@ fun MangaChapterScreen(
                         modifier = Modifier.size(25.dp)
                     )
                     Spacer(Modifier.width(5.dp))
-                    Text("My List", color = Color.White)
+                    Text("My List", color = Color.White,fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -216,9 +241,21 @@ fun MangaChapterScreen(
         }
 
         // Loading or list
-        if (getChapters.value.isEmpty()) {
+        if (isLoading.value) {
             item {
-                Text("Loading chapters...", color = Color.Gray)
+                if(chapterError.isNullOrEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        LottieAnimation(
+                            composition = composition,
+                            progress = { progress },
+                            modifier = Modifier.size(150.dp)
+                        )
+                    }
+                }
+
             }
         } else {
             items(getChapters.value) { item ->

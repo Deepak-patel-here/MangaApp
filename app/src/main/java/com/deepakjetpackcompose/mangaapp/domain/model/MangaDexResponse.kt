@@ -1,6 +1,7 @@
 package com.deepakjetpackcompose.mangaapp.domain.model
 
 import kotlinx.serialization.Serializable
+import kotlin.String
 
 @Serializable
 data class MangaDexResponse(
@@ -75,3 +76,4 @@ data class Relationship(
     val id: String,
     val type: String
 )
+

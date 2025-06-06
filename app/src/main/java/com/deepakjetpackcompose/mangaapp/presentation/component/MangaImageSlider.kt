@@ -21,17 +21,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.deepakjetpackcompose.mangaapp.domain.model.MangaUiModel
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.delay
 import com.deepakjetpackcompose.mangaapp.R
+import com.deepakjetpackcompose.mangaapp.data.navigation.NavigationHelper
+import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MangaImagePager(mangaList: List<MangaUiModel>) {
+fun MangaImagePager(mangaViewModel: MangaViewModel,navController: NavController,mangaList: List<MangaUiModel>) {
     if (mangaList.isEmpty()) return
 
     val configuration = LocalConfiguration.current
@@ -55,6 +60,10 @@ fun MangaImagePager(mangaList: List<MangaUiModel>) {
             .height(imageHeightDp)
     ) { page ->
         val manga = mangaList[page]
+        val encodedUrl = URLEncoder.encode(manga.imgUrl, StandardCharsets.UTF_8.toString())
+        val encodedTitle = URLEncoder.encode(manga.title, StandardCharsets.UTF_8.toString())
+        val encodedDescription = URLEncoder.encode(manga.description, StandardCharsets.UTF_8.toString())
+        val encodedId = URLEncoder.encode(manga.id, StandardCharsets.UTF_8.toString())
 
         Box(modifier = Modifier.fillMaxSize()) {
             val painter = rememberAsyncImagePainter(model = manga.imgUrl)
@@ -102,7 +111,12 @@ fun MangaImagePager(mangaList: List<MangaUiModel>) {
                     Spacer(Modifier.height(10.dp))
                     Row {
                         Button(
-                            onClick = {},
+                            onClick = {
+                                mangaViewModel.getMangaChapter(mangaId = manga.id)
+                                navController.navigate(
+                                    "${NavigationHelper.ChapterScreen.route}/$encodedUrl/$encodedTitle/$encodedDescription/$encodedId"
+                                )
+                            },
                             modifier = Modifier
                                 .width(100.dp)
                                 .height(35.dp),

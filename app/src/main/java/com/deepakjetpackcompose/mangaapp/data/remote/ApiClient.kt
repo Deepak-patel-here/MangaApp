@@ -13,6 +13,7 @@ import io.ktor.client.request.parameter
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -98,17 +99,36 @@ object ApiClient {
         val response: ChapterData=client.get("https://api.mangadex.org/at-home/server/$chapterId").body()
         return response
     }
+
+
+    suspend fun searchManga(query: String): List<Manga> {
+        val response = client.get("https://api.mangadex.org/manga") {
+            parameter("title", query)
+            parameter("limit", 20)
+            parameter("includes[]", listOf("cover_art", "author")) // Optional
+        }
+
+        if (response.status.isSuccess()) {
+            val result = response.body<MangaDexResponse>()  // Use your MangaResponse data class
+            return result.data
+        } else {
+            throw Exception("Failed to search manga: ${response.status}")
+        }
+    }
 }
 
 fun main()= runBlocking {
-    val mangas = ApiClient.getTopAiredManga()
+    val mangas = ApiClient.getFavouriteManga()
     val manga=mangas[0]
+    println(manga.attributes.title)
     val chapters= ApiClient.getChaptersForManga(manga.id)
     chapters.forEach {chapter->
+        println(chapter.attributes.title)
         println(chapter.id)
     }
     val chapter= ApiClient.getChapterData(chapters[0].id)
-    println("${chapter.baseUrl}/data/${chapter.chapter?.hash}/${chapter.chapter?.data?.get(0)}")
+    println()
+    println("${chapter.baseUrl}/data/${chapter.chapter?.hash}/${chapter.chapter?.dataSaver?.get(0)}")
 
 
 

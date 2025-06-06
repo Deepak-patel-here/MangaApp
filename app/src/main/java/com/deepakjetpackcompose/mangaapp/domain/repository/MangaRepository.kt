@@ -39,4 +39,8 @@ class MangaRepository {
     suspend fun fetchMangaCover(coverId: String): String{
         return ApiClient.getMangaCover(coverId = coverId)
     }
+
+    suspend fun searchManga(query: String): List<Manga>{
+        return ApiClient.searchManga(query=query)
+    }
 }
