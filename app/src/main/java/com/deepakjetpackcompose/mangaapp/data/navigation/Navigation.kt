@@ -9,9 +9,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.deepakjetpackcompose.mangaapp.presentation.screens.HomeScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.MangaChapterScreen
+import com.deepakjetpackcompose.mangaapp.presentation.screens.MyApp
 import com.deepakjetpackcompose.mangaapp.presentation.screens.ReadScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.SearchScreen
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
+import okio.Utf8
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
@@ -19,7 +21,7 @@ import java.nio.charset.StandardCharsets
 fun Navigation(modifier: Modifier = Modifier, mangaViewModel: MangaViewModel) {
     val navController= rememberNavController()
 
-    NavHost(navController = navController, startDestination = NavigationHelper.HomeScreen.route) {
+    NavHost(navController = navController, startDestination = NavigationHelper.MyApp.route) {
 
         composable (route = NavigationHelper.HomeScreen.route){
             HomeScreen(mangaViewModel = mangaViewModel, navController = navController)
@@ -44,13 +46,24 @@ fun Navigation(modifier: Modifier = Modifier, mangaViewModel: MangaViewModel) {
             MangaChapterScreen(mangaViewModel = mangaViewModel, navController=navController, title = decodedTitle, imgUrl = decodedImage, desc = decodedDesc, mangaId = decodedId)
         }
 
-        composable (route = NavigationHelper.ReadScreen.route){
-            ReadScreen(mangaViewModel = mangaViewModel, navController = navController, modifier = modifier)
+        composable (route = "${NavigationHelper.ReadScreen.route}/{id}",
+            arguments = listOf(
+                navArgument("id") {type= NavType.StringType  }
+            )){backStackEntry->
+            val id=backStackEntry.arguments?.get("id").toString()?:""
+            val decodedId= URLDecoder.decode(id, StandardCharsets.UTF_8.toString())
+            ReadScreen(mangaViewModel = mangaViewModel, navController = navController, chapterId = id, modifier = modifier)
         }
 
         composable (route = NavigationHelper.SearchScreen.route){
             SearchScreen(mangaViewModel = mangaViewModel, navController = navController, modifier = modifier)
         }
+
+        composable (route = NavigationHelper.MyApp.route){
+            MyApp(mangaViewModel = mangaViewModel, navController = navController, modifier = modifier)
+        }
+
+
     }
 
 }

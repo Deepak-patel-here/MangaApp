@@ -67,7 +67,7 @@ fun HomeScreen(
         )
 
         systemController.setNavigationBarColor(
-            color = Color.Black,
+            color = Color(0xFF1D1D1D),
             darkIcons = false
         )
     }

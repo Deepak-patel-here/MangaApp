@@ -83,7 +83,7 @@ fun MangaImagePager(mangaViewModel: MangaViewModel,navController: NavController,
                     .background(
                         Brush.verticalGradient(
                             colorStops = arrayOf(
-                                0.0f to Color.Black.copy(alpha = 0.4f),
+                                0.0f to Color(0xFF1D1D1D),
                                 0.2f to Color.Transparent,
                                 1.0f to Color(0xFF1D1D1D)
                             )

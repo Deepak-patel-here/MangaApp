@@ -5,4 +5,5 @@ sealed class NavigationHelper(val route:String) {
     object ChapterScreen: NavigationHelper(route = "chapter")
     object ReadScreen: NavigationHelper(route = "read")
     object SearchScreen: NavigationHelper(route = "search")
+    object MyApp: NavigationHelper(route = "app")
 }

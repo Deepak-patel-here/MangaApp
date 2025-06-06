@@ -65,6 +65,8 @@ import com.deepakjetpackcompose.mangaapp.R
 import com.deepakjetpackcompose.mangaapp.data.navigation.NavigationHelper
 import com.deepakjetpackcompose.mangaapp.presentation.component.ChaptersComponent
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 
 @Composable
@@ -163,8 +165,9 @@ fun MangaChapterScreen(
                             Toast.makeText(context, "Sorry, but the chapter is unavailable", Toast.LENGTH_SHORT).show()
                         }
                         else {
+                            val id= URLEncoder.encode(getChapters.value[0].id,StandardCharsets.UTF_8.toString())
                             mangaViewModel.getChapterImages(getChapters.value[0].id)
-                            navController.navigate(NavigationHelper.ReadScreen.route)
+                            navController.navigate("${NavigationHelper.ReadScreen.route}/$id")
                         }
                     },
                     modifier = Modifier
@@ -259,12 +262,13 @@ fun MangaChapterScreen(
             }
         } else {
             items(getChapters.value) { item ->
+                val id= URLEncoder.encode(item.id,StandardCharsets.UTF_8.toString())
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable(onClick = {
                             mangaViewModel.getChapterImages(item.id)
-                            navController.navigate(NavigationHelper.ReadScreen.route)
+                            navController.navigate("${NavigationHelper.ReadScreen.route}/$id")
                         }),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
