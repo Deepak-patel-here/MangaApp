@@ -117,13 +117,13 @@ fun HomeScreen(
         }
     }else {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .verticalScroll(
                     rememberScrollState()
                 )
                 .background(Color(0xFF1D1D1D))
-                .navigationBarsPadding()
+
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 // Background image slider

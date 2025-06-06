@@ -18,9 +18,9 @@ import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
 fun MyApp(mangaViewModel: MangaViewModel,navController: NavController,modifier: Modifier = Modifier) {
     val isSelected= rememberSaveable { mutableIntStateOf(1) }
     Scaffold(bottomBar = { MangaBottomBar(isSelected = isSelected, modifier = Modifier.navigationBarsPadding()) }) { innerPadding->
-
+        val contentModifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding())
         when(isSelected.intValue){
-            1 ->HomeScreen(mangaViewModel = mangaViewModel, navController = navController, modifier = Modifier.padding(innerPadding))
+            1 ->HomeScreen(mangaViewModel = mangaViewModel, navController = navController, modifier = contentModifier)
             2->ScheduleScreen()
             3->ScheduleScreen()
             4->ScheduleScreen()
