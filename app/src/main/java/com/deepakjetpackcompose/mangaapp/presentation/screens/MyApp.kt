@@ -22,7 +22,7 @@ fun MyApp(mangaViewModel: MangaViewModel,navController: NavController,modifier: 
         when(isSelected.intValue){
             1 ->HomeScreen(mangaViewModel = mangaViewModel, navController = navController, modifier = contentModifier)
             2->ScheduleScreen()
-            3->ScheduleScreen()
+            3->MyListScreen(mangaViewModel=mangaViewModel,navController=navController)
             4->ScheduleScreen()
         }
     }

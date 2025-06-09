@@ -8,11 +8,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.deepakjetpackcompose.mangaapp.presentation.screens.HomeScreen
+import com.deepakjetpackcompose.mangaapp.presentation.screens.LoginScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.MangaChapterScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.MyApp
+import com.deepakjetpackcompose.mangaapp.presentation.screens.MyListScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.ReadScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.SearchScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.SeeAllScreen
+import com.deepakjetpackcompose.mangaapp.presentation.screens.SignUpScreen
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
@@ -20,6 +23,7 @@ import java.nio.charset.StandardCharsets
 @Composable
 fun Navigation(modifier: Modifier = Modifier, mangaViewModel: MangaViewModel) {
     val navController= rememberNavController()
+
 
     NavHost(navController = navController, startDestination = NavigationHelper.MyApp.route) {
 
@@ -76,6 +80,18 @@ fun Navigation(modifier: Modifier = Modifier, mangaViewModel: MangaViewModel) {
             val title=backStackEntry.arguments?.getString("title")?:"Unknown"
             val code=backStackEntry.arguments?.getInt("id")?:0
             SeeAllScreen(mangaViewModel = mangaViewModel, navController = navController, title = title, code = code, modifier = modifier)
+        }
+
+        composable (route= NavigationHelper.Login.route){
+            LoginScreen(mangaViewModel = mangaViewModel, navController = navController)
+        }
+
+        composable (route= NavigationHelper.SignUp.route){
+            SignUpScreen(mangaViewModel = mangaViewModel, navController = navController)
+        }
+
+        composable (route= NavigationHelper.MyList.route){
+            MyListScreen(mangaViewModel = mangaViewModel, navController = navController)
         }
 
 

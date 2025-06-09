@@ -10,41 +10,61 @@ import com.deepakjetpackcompose.mangaapp.domain.model.chpater.Chapter
 import com.deepakjetpackcompose.mangaapp.domain.model.chpater.ChapterData
 import com.deepakjetpackcompose.mangaapp.domain.model.responseconverter.ChapterResponse
 import com.deepakjetpackcompose.mangaapp.domain.repository.MangaRepository
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class MangaViewModel : ViewModel() {
     private val _repository = MangaRepository()
     private val _mangaList = MutableStateFlow<List<MangaUiModel>>(emptyList())
-    val mangaList: StateFlow<List<MangaUiModel>> = _mangaList
+    val mangaList: StateFlow<List<MangaUiModel>> = _mangaList.asStateFlow()
 
     private val _getTopAired= MutableStateFlow<List<MangaUiModel>>(emptyList())
-    val getTopAired: StateFlow<List<MangaUiModel>> = _getTopAired
+    val getTopAired: StateFlow<List<MangaUiModel>> = _getTopAired.asStateFlow()
 
     private val _getFavourite= MutableStateFlow<List<MangaUiModel>>(emptyList())
-    val getFavourite: StateFlow<List<MangaUiModel>> = _getFavourite
+    val getFavourite: StateFlow<List<MangaUiModel>> = _getFavourite.asStateFlow()
 
     private val _getUpdated= MutableStateFlow<List<MangaUiModel>>(emptyList())
-    val getUpdated: StateFlow<List<MangaUiModel>> = _getUpdated
+    val getUpdated: StateFlow<List<MangaUiModel>> = _getUpdated.asStateFlow()
 
     private val _getNew= MutableStateFlow<List<MangaUiModel>>(emptyList())
-    val getNew: StateFlow<List<MangaUiModel>> = _getNew
+    val getNew: StateFlow<List<MangaUiModel>> = _getNew.asStateFlow()
 
     private val _getChapters= MutableStateFlow<List<ChapterResponse>>(emptyList())
-    val getChapters: StateFlow<List<ChapterResponse>> = _getChapters
+    val getChapters: StateFlow<List<ChapterResponse>> = _getChapters.asStateFlow()
 
     private val _chapterImages = MutableStateFlow<ChapterData>(ChapterData())
-    val chapterImages: StateFlow<ChapterData> = _chapterImages
+    val chapterImages: StateFlow<ChapterData> = _chapterImages.asStateFlow()
 
     private val _isLoading = MutableStateFlow<Boolean>(false)
-    val isLoading: StateFlow<Boolean> = _isLoading
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _chapterError = MutableStateFlow<String?>(null)
-    val chapterError: StateFlow<String?> = _chapterError
+    val chapterError: StateFlow<String?> = _chapterError.asStateFlow()
 
     private val _searchMangaList = MutableStateFlow<List<MangaUiModel>>(emptyList())
-    val searchMangaList: StateFlow<List<MangaUiModel>> = _searchMangaList
+    val searchMangaList: StateFlow<List<MangaUiModel>> = _searchMangaList.asStateFlow()
+
+    private val auth: FirebaseAuth= Firebase.auth
+
+    private val _authState= MutableStateFlow<AuthState>(AuthState.UnAuthenticated)
+    val authState: StateFlow<AuthState> = _authState.asStateFlow()
+
+    init {
+        checkUser()
+    }
+
+    fun checkUser(){
+        if(auth.currentUser!=null){
+            _authState.value= AuthState.Authenticated
+        }else _authState.value= AuthState.UnAuthenticated
+    }
+
 
 
 
@@ -404,8 +424,45 @@ class MangaViewModel : ViewModel() {
     }
 
 
+    fun signUp(name:String,email:String,password:String,onResult:(Boolean,String)->Unit){
+        _authState.value= AuthState.Loading
+        auth.createUserWithEmailAndPassword(email,password)
+            .addOnSuccessListener {
+                _authState.value= AuthState.Authenticated
+                onResult(true,"SignUp Successful")
+            }
+            .addOnFailureListener {
+                _authState.value= AuthState.UnAuthenticated
+                onResult(false,it.localizedMessage)
+            }
+    }
+
+    fun login(email:String,password:String,onResult:(Boolean,String)->Unit){
+        _authState.value= AuthState.Loading
+        auth.signInWithEmailAndPassword(email,password)
+            .addOnSuccessListener {
+                _authState.value= AuthState.Authenticated
+                onResult(true,"Login Successful")
+            }
+            .addOnFailureListener {
+                _authState.value= AuthState.UnAuthenticated
+                onResult(false,it.localizedMessage)
+            }
+    }
 
 
 
 
+
+
+
+
+
+}
+
+
+sealed class AuthState(){
+    object UnAuthenticated: AuthState()
+    object Authenticated: AuthState()
+    object Loading: AuthState()
 }

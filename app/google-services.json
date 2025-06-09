@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "193126029282",
+    "project_id": "mangacore-3d486",
+    "storage_bucket": "mangacore-3d486.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193126029282:android:010e291c198ec5cad00bbb",
+        "android_client_info": {
+          "package_name": "com.deepakjetpackcompose.mangaapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpBganzpz--7mMKEDYqLI1D4SoO67DuWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
