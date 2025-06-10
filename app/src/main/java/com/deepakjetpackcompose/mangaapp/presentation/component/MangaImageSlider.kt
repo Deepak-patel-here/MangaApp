@@ -1,5 +1,6 @@
 package com.deepakjetpackcompose.mangaapp.presentation.component
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -29,6 +30,7 @@ import com.google.accompanist.pager.*
 import kotlinx.coroutines.delay
 import com.deepakjetpackcompose.mangaapp.R
 import com.deepakjetpackcompose.mangaapp.data.navigation.NavigationHelper
+import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.AuthState
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -41,6 +43,8 @@ fun MangaImagePager(mangaViewModel: MangaViewModel,navController: NavController,
 
     val configuration = LocalConfiguration.current
     val imageHeightDp = configuration.screenHeightDp.dp * 0.49f
+    val context=LocalContext.current
+    val authState=mangaViewModel.authState.collectAsState()
 
     val pagerState = rememberPagerState()
 
@@ -144,7 +148,22 @@ fun MangaImagePager(mangaViewModel: MangaViewModel,navController: NavController,
                         Spacer(Modifier.width(20.dp))
 
                         OutlinedButton(
-                            onClick = {},
+                            onClick = {
+                                if(authState.value== AuthState.Authenticated) {
+                                    mangaViewModel.addManga(
+                                        manga = manga
+                                    ) { success, msg ->
+                                        if (success) {
+                                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                        }
+
+                                    }
+                                }else{
+                                    Toast.makeText(context, "Please sign in to add", Toast.LENGTH_SHORT).show()
+                                }
+                            },
                             border = BorderStroke(width = 1.dp, color = Color.White),
                             modifier = Modifier
                                 .wrapContentSize()

@@ -63,7 +63,9 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.deepakjetpackcompose.mangaapp.R
 import com.deepakjetpackcompose.mangaapp.data.navigation.NavigationHelper
+import com.deepakjetpackcompose.mangaapp.domain.model.MangaUiModel
 import com.deepakjetpackcompose.mangaapp.presentation.component.ChaptersComponent
+import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.AuthState
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -80,10 +82,15 @@ fun MangaChapterScreen(
     modifier: Modifier = Modifier
 ) {
     val getChapters = mangaViewModel.getChapters.collectAsState()
+    val authState=mangaViewModel.authState.collectAsState()
+
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loader))
-    val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
-    val context= LocalContext.current
-    val isLoading=mangaViewModel.isLoading.collectAsState()
+    val progress by animateLottieCompositionAsState(
+        composition,
+        iterations = LottieConstants.IterateForever
+    )
+    val context = LocalContext.current
+    val isLoading = mangaViewModel.isLoading.collectAsState()
     val chapterError by mangaViewModel.chapterError.collectAsState()
 
     LaunchedEffect(chapterError) {
@@ -161,11 +168,17 @@ fun MangaChapterScreen(
             ) {
                 Button(
                     onClick = {
-                        if(getChapters.value.isEmpty()){
-                            Toast.makeText(context, "Sorry, but the chapter is unavailable", Toast.LENGTH_SHORT).show()
-                        }
-                        else {
-                            val id= URLEncoder.encode(getChapters.value[0].id,StandardCharsets.UTF_8.toString())
+                        if (getChapters.value.isEmpty()) {
+                            Toast.makeText(
+                                context,
+                                "Sorry, but the chapter is unavailable",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            val id = URLEncoder.encode(
+                                getChapters.value[0].id,
+                                StandardCharsets.UTF_8.toString()
+                            )
                             mangaViewModel.getChapterImages(getChapters.value[0].id)
                             navController.navigate("${NavigationHelper.ReadScreen.route}/$id")
                         }
@@ -180,7 +193,7 @@ fun MangaChapterScreen(
                 ) {
                     Text("Read", color = Color.White, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.width(10.dp))
-                   Icon(
+                    Icon(
                         painter = painterResource(R.drawable.read),
                         contentDescription = null,
                         tint = Color.White,
@@ -191,7 +204,33 @@ fun MangaChapterScreen(
                 Spacer(Modifier.width(30.dp))
 
                 OutlinedButton(
-                    onClick = {},
+
+
+                    onClick = {
+                        if(authState.value== AuthState.Authenticated) {
+                            mangaViewModel.addManga(
+                                manga = MangaUiModel(
+                                    title = title,
+                                    description = desc,
+                                    imgUrl = imgUrl,
+                                    id = mangaId,
+                                    status = "Going On",
+                                    isLocked = false,
+                                    year = 1997,
+                                    contentRating = ""
+                                )
+                            ) { success, msg ->
+                                if (success) {
+                                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                }
+
+                            }
+                        }else{
+                            Toast.makeText(context, "Please sign in to add", Toast.LENGTH_SHORT).show()
+                        }
+                    },
                     border = BorderStroke(1.dp, Color.White),
                     modifier = Modifier.height(35.dp)
                 ) {
@@ -202,7 +241,7 @@ fun MangaChapterScreen(
                         modifier = Modifier.size(25.dp)
                     )
                     Spacer(Modifier.width(5.dp))
-                    Text("My List", color = Color.White,fontWeight = FontWeight.Bold)
+                    Text("My List", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -246,7 +285,7 @@ fun MangaChapterScreen(
         // Loading or list
         if (isLoading.value) {
             item {
-                if(chapterError.isNullOrEmpty()) {
+                if (chapterError.isNullOrEmpty()) {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -262,7 +301,7 @@ fun MangaChapterScreen(
             }
         } else {
             items(getChapters.value) { item ->
-                val id= URLEncoder.encode(item.id,StandardCharsets.UTF_8.toString())
+                val id = URLEncoder.encode(item.id, StandardCharsets.UTF_8.toString())
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

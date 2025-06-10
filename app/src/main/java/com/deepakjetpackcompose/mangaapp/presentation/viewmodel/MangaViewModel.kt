@@ -6,13 +6,17 @@ import androidx.lifecycle.viewModelScope
 import com.deepakjetpackcompose.mangaapp.domain.model.ChapterModel
 import com.deepakjetpackcompose.mangaapp.domain.model.Manga
 import com.deepakjetpackcompose.mangaapp.domain.model.MangaUiModel
+import com.deepakjetpackcompose.mangaapp.domain.model.User
 import com.deepakjetpackcompose.mangaapp.domain.model.chpater.Chapter
 import com.deepakjetpackcompose.mangaapp.domain.model.chpater.ChapterData
 import com.deepakjetpackcompose.mangaapp.domain.model.responseconverter.ChapterResponse
 import com.deepakjetpackcompose.mangaapp.domain.repository.MangaRepository
+import com.deepakjetpackcompose.mangaapp.presentation.constants.MANGA
+import com.deepakjetpackcompose.mangaapp.presentation.constants.USER
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,9 +55,13 @@ class MangaViewModel : ViewModel() {
     val searchMangaList: StateFlow<List<MangaUiModel>> = _searchMangaList.asStateFlow()
 
     private val auth: FirebaseAuth= Firebase.auth
+    private val firestore: FirebaseFirestore= FirebaseFirestore.getInstance()
 
     private val _authState= MutableStateFlow<AuthState>(AuthState.UnAuthenticated)
     val authState: StateFlow<AuthState> = _authState.asStateFlow()
+
+    private val _myMangaLIst= MutableStateFlow<List<MangaUiModel>>(emptyList())
+    val myMangaList: StateFlow<List<MangaUiModel>> = _myMangaLIst.asStateFlow()
 
     init {
         checkUser()
@@ -429,7 +437,17 @@ class MangaViewModel : ViewModel() {
         auth.createUserWithEmailAndPassword(email,password)
             .addOnSuccessListener {
                 _authState.value= AuthState.Authenticated
-                onResult(true,"SignUp Successful")
+                val uid=it.user?.uid ?: return@addOnSuccessListener
+                val user=User(name=name,email=email)
+                firestore.collection(USER).document(uid).set(user)
+                    .addOnSuccessListener {
+                        _authState.value = AuthState.Authenticated
+                        onResult(true, "SignUp Successful")
+                    }
+                    .addOnFailureListener {
+                        _authState.value = AuthState.UnAuthenticated
+                        onResult(false, "Auth OK but Firestore failed: ${it.localizedMessage}")
+                    }
             }
             .addOnFailureListener {
                 _authState.value= AuthState.UnAuthenticated
@@ -447,6 +465,62 @@ class MangaViewModel : ViewModel() {
             .addOnFailureListener {
                 _authState.value= AuthState.UnAuthenticated
                 onResult(false,it.localizedMessage)
+            }
+    }
+
+
+    fun addManga(manga: MangaUiModel,onResult: (Boolean, String) -> Unit){
+        val uid=auth.currentUser?.uid
+        if(uid==null){
+            onResult(false, "User not authenticated")
+            return
+        }
+
+        firestore.collection(USER).document(uid).collection(MANGA).document(manga.id).set(manga)
+            .addOnSuccessListener {
+                onResult(true, "Manga added to your list")
+            }
+            .addOnFailureListener {
+                onResult(false, it.localizedMessage ?: "Unknown error")
+            }
+    }
+
+    fun getUserMangaList() {
+        _myMangaLIst.value=emptyList()
+        _isLoading.value=true
+        val uid = auth.currentUser?.uid
+        if(uid!=null) {
+            firestore.collection(USER)
+                .document(uid)
+                .collection(MANGA)
+                .get()
+                .addOnSuccessListener { snapshot ->
+                    val list = snapshot.toObjects(MangaUiModel::class.java)
+                    _myMangaLIst.value = list
+                    _isLoading.value = false
+
+                }
+                .addOnFailureListener {
+                    _myMangaLIst.value = emptyList()
+                    _isLoading.value = false
+
+                }
+        }
+    }
+
+    fun removeManga(id:String,onResult: (Boolean, String) -> Unit){
+        val uid=auth.currentUser?.uid
+        if(uid==null){
+            onResult(false, "User not authenticated")
+            return
+        }
+
+        firestore.collection(USER).document(uid).collection(MANGA).document(id).delete()
+            .addOnSuccessListener {
+                onResult(true, "Manga deleted successfully")
+            }
+            .addOnFailureListener {
+                onResult(false, it.localizedMessage ?: "Unknown error")
             }
     }
 

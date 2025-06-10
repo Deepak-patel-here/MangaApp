@@ -1,5 +1,6 @@
 package com.deepakjetpackcompose.mangaapp.presentation.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -46,6 +48,7 @@ import com.deepakjetpackcompose.mangaapp.data.navigation.NavigationHelper
 import com.deepakjetpackcompose.mangaapp.data.remote.main
 import com.deepakjetpackcompose.mangaapp.domain.model.MangaUiModel
 import com.deepakjetpackcompose.mangaapp.presentation.component.MangaPanel
+import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.AuthState
 import com.deepakjetpackcompose.mangaapp.presentation.viewmodel.MangaViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -64,6 +67,9 @@ fun SeeAllScreen(
     val newly = mangaViewModel.getNew.collectAsState()
     val updated = mangaViewModel.getUpdated.collectAsState()
     val systemController = rememberSystemUiController()
+    val authState=mangaViewModel.authState.collectAsState()
+    val context= LocalContext.current
+
 
 
     SideEffect {
@@ -168,7 +174,22 @@ fun SeeAllScreen(
                         )
 
                         Button(
-                            onClick = {},
+                            onClick = {
+                                if(authState.value== AuthState.Authenticated) {
+                                    mangaViewModel.addManga(
+                                        manga = manga
+                                    ) { success, msg ->
+                                        if (success) {
+                                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                        }
+
+                                    }
+                                }else{
+                                    Toast.makeText(context, "Please sign in to add", Toast.LENGTH_SHORT).show()
+                                }
+                            },
                             colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                             modifier = Modifier
                                 .wrapContentSize()
