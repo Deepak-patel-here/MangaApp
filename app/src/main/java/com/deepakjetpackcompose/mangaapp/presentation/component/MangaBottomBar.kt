@@ -32,7 +32,7 @@ fun MangaBottomBar(isSelected: MutableState<Int>, modifier: Modifier = Modifier)
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(70.dp)
+            .height(85.dp)
             .background(Color(0xFF1D1D1D)),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
