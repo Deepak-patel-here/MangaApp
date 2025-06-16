@@ -36,7 +36,7 @@ fun ListTopBar(title: String, modifier: Modifier = Modifier, onSearch: () -> Uni
 
     Row(modifier= modifier.fillMaxWidth().background(Color(0xFF1D1D1D)).padding(vertical=5.dp),
         verticalAlignment = Alignment.CenterVertically){
-        Card( modifier = Modifier.size(35.dp),
+        Card( modifier = Modifier.size(45.dp),
             shape = CircleShape,
             elevation = CardDefaults.elevatedCardElevation(3.dp)
         ) {
@@ -54,7 +54,7 @@ fun ListTopBar(title: String, modifier: Modifier = Modifier, onSearch: () -> Uni
             imageVector = Icons.Default.Search,
             contentDescription = null,
             tint = Color.White,
-            modifier = Modifier.clickable(onClick = {onSearch()})
+            modifier = Modifier.size(30.dp).clickable(onClick = {onSearch()})
         )
     }
 

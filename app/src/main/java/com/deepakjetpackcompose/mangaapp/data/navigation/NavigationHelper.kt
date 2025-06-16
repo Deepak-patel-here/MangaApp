@@ -10,4 +10,5 @@ sealed class NavigationHelper(val route:String) {
     object Login: NavigationHelper(route = "login")
     object SignUp: NavigationHelper(route = "signup")
     object MyList: NavigationHelper(route = "list")
+    object ProfileScreen: NavigationHelper(route = "profile")
 }

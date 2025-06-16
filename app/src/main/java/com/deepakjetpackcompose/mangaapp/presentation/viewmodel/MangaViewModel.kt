@@ -63,6 +63,9 @@ class MangaViewModel : ViewModel() {
     private val _myMangaLIst= MutableStateFlow<List<MangaUiModel>>(emptyList())
     val myMangaList: StateFlow<List<MangaUiModel>> = _myMangaLIst.asStateFlow()
 
+    private val _myUser= MutableStateFlow<User>(User("",""))
+    val myUser: StateFlow<User> = _myUser
+
     init {
         checkUser()
     }
@@ -522,6 +525,33 @@ class MangaViewModel : ViewModel() {
             .addOnFailureListener {
                 onResult(false, it.localizedMessage ?: "Unknown error")
             }
+    }
+
+    fun getUser(){
+        val uid=auth.currentUser?.uid
+        if(uid!=null){
+            firestore.collection(USER).document(uid).get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val name = document.getString("name")
+                        val email = document.getString("email")
+                        // Access other fields similarly
+                        Log.d("PROFILE", "Name: $name, Email: $email")
+
+                        _myUser.value= User(name = name?:"unknown", email = email?:"unknown")
+                    } else {
+                        Log.d("PROFILE", "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("PROFILE", "get failed with ", exception)
+                }
+        }
+    }
+
+    fun signOut(){
+        auth.signOut()
+        _authState.value= AuthState.UnAuthenticated
     }
 
 

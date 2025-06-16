@@ -56,21 +56,10 @@ fun HomeScreen(
     val updatedManga=mangaViewModel.getUpdated.collectAsState()
     val newManga=mangaViewModel.getNew.collectAsState()
     val isLoading=mangaViewModel.isLoading.collectAsState()
-    val systemController = rememberSystemUiController()
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loader))
     val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
 
-    SideEffect {
-        systemController.setStatusBarColor(
-            color = Color.Transparent,
-            darkIcons = false
-        )
 
-        systemController.setNavigationBarColor(
-            color = Color(0xFF1D1D1D),
-            darkIcons = false
-        )
-    }
 
     LaunchedEffect(Unit) {
         if (mangaViewModel.mangaList.value.isEmpty()) {

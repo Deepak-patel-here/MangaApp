@@ -12,6 +12,7 @@ import com.deepakjetpackcompose.mangaapp.presentation.screens.LoginScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.MangaChapterScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.MyApp
 import com.deepakjetpackcompose.mangaapp.presentation.screens.MyListScreen
+import com.deepakjetpackcompose.mangaapp.presentation.screens.ProfileScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.ReadScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.SearchScreen
 import com.deepakjetpackcompose.mangaapp.presentation.screens.SeeAllScreen
@@ -92,6 +93,10 @@ fun Navigation(modifier: Modifier = Modifier, mangaViewModel: MangaViewModel) {
 
         composable (route= NavigationHelper.MyList.route){
             MyListScreen(mangaViewModel = mangaViewModel, navController = navController)
+        }
+
+        composable (route= NavigationHelper.ProfileScreen.route){
+            ProfileScreen(mangaViewModel = mangaViewModel, navController = navController)
         }
 
 
