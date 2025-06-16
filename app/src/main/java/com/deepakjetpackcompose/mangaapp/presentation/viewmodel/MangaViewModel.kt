@@ -3,11 +3,8 @@ package com.deepakjetpackcompose.mangaapp.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.deepakjetpackcompose.mangaapp.domain.model.ChapterModel
-import com.deepakjetpackcompose.mangaapp.domain.model.Manga
 import com.deepakjetpackcompose.mangaapp.domain.model.MangaUiModel
 import com.deepakjetpackcompose.mangaapp.domain.model.User
-import com.deepakjetpackcompose.mangaapp.domain.model.chpater.Chapter
 import com.deepakjetpackcompose.mangaapp.domain.model.chpater.ChapterData
 import com.deepakjetpackcompose.mangaapp.domain.model.responseconverter.ChapterResponse
 import com.deepakjetpackcompose.mangaapp.domain.repository.MangaRepository
@@ -65,6 +62,9 @@ class MangaViewModel : ViewModel() {
 
     private val _myUser= MutableStateFlow<User>(User("",""))
     val myUser: StateFlow<User> = _myUser
+
+    private val _upcomingManga= MutableStateFlow<List<MangaUiModel>>(emptyList())
+    val upcomingManga: StateFlow<List<MangaUiModel>> = _upcomingManga
 
     init {
         checkUser()
@@ -553,6 +553,10 @@ class MangaViewModel : ViewModel() {
         auth.signOut()
         _authState.value= AuthState.UnAuthenticated
     }
+
+
+
+
 
 
 

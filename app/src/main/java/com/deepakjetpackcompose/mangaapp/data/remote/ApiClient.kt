@@ -4,6 +4,8 @@ import com.deepakjetpackcompose.mangaapp.domain.model.ChapterModel
 import com.deepakjetpackcompose.mangaapp.domain.model.Data
 import com.deepakjetpackcompose.mangaapp.domain.model.Manga
 import com.deepakjetpackcompose.mangaapp.domain.model.MangaDexResponse
+import com.deepakjetpackcompose.mangaapp.domain.model.MangaUiModel
+import com.deepakjetpackcompose.mangaapp.domain.model.chpater.Chapter
 import com.deepakjetpackcompose.mangaapp.domain.model.chpater.ChapterData
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -13,12 +15,16 @@ import io.ktor.client.request.parameter
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.ktor.http.date
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+
 
 object ApiClient {
     val client: HttpClient= HttpClient{
@@ -115,6 +121,10 @@ object ApiClient {
             throw Exception("Failed to search manga: ${response.status}")
         }
     }
+
+
+
+
 }
 
 fun main()= runBlocking {

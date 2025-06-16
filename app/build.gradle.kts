@@ -96,5 +96,8 @@ dependencies {
     //statusbar
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
 
+    //clock
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+
 
 }

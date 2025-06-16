@@ -4,12 +4,18 @@ import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +33,8 @@ import java.time.LocalDate
 @Composable
 fun ScheduleScreen(navController: NavController,mangaViewModel: MangaViewModel, modifier: Modifier = Modifier) {
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+    val mangaData=mangaViewModel.upcomingManga.collectAsState()
+
 
     Scaffold(topBar = {
         ListTopBar(
@@ -43,6 +51,17 @@ fun ScheduleScreen(navController: NavController,mangaViewModel: MangaViewModel, 
                 selectedDate = selectedDate,
                 onDateSelected = { selectedDate = it }
             )
+
+            Divider(color = Color.Red, thickness = 4.dp, modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp))
+
+            LazyColumn(modifier = Modifier.fillMaxSize()){
+
+                items (mangaData.value){manga->
+                    Text(manga.title, modifier = Modifier.padding(20.dp), color = Color.White)
+                }
+            }
+
+
 
         }
     }

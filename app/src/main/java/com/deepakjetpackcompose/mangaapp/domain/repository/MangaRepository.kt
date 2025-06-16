@@ -3,6 +3,7 @@ package com.deepakjetpackcompose.mangaapp.domain.repository
 import com.deepakjetpackcompose.mangaapp.data.remote.ApiClient
 import com.deepakjetpackcompose.mangaapp.domain.model.Data
 import com.deepakjetpackcompose.mangaapp.domain.model.Manga
+import com.deepakjetpackcompose.mangaapp.domain.model.MangaUiModel
 import com.deepakjetpackcompose.mangaapp.domain.model.chpater.ChapterData
 
 class MangaRepository {
@@ -43,4 +44,7 @@ class MangaRepository {
     suspend fun searchManga(query: String): List<Manga>{
         return ApiClient.searchManga(query=query)
     }
+
+
+
 }
